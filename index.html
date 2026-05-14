@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumen Formas Normales</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bricolage+Grotesque:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2eb;
+    --card: #ffffff;
+    --text: #1a1a2e;
+    --muted: #6b6b8a;
+    --border: #e0ddd5;
+    --c1: #e85d3a;
+    --c2: #7c3af5;
+    --c3: #1a9e6e;
+    --c1bg: #fef2ee;
+    --c2bg: #f3eeff;
+    --c3bg: #edfaf4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Bricolage Grotesque', sans-serif;
+    padding: 32px 16px;
+    min-height: 100vh;
+  }
+
+  .container { max-width: 820px; margin: 0 auto; }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+  }
+
+  header p {
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+  }
+
+  /* FLOW */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+  }
+
+  .flow-item {
+    text-align: center;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: 2px solid;
+    min-width: 110px;
+  }
+
+  .flow-item.raw { background: #fff0ee; border-color: #f5c6bc; color: #c0392b; }
+  .flow-item.fn1 { background: var(--c1bg); border-color: var(--c1); color: var(--c1); }
+  .flow-item.fn2 { background: var(--c2bg); border-color: var(--c2); color: var(--c2); }
+  .flow-item.fn3 { background: var(--c3bg); border-color: var(--c3); color: var(--c3); }
+
+  .flow-arrow {
+    font-size: 1.4rem;
+    color: var(--muted);
+    padding: 0 8px;
+  }
+
+  /* FN CARDS */
+  .fn-card {
+    background: var(--card);
+    border-radius: 20px;
+    border: 2px solid var(--border);
+    padding: 32px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fn-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+  }
+
+  .fn-card.fn1::before { background: var(--c1); }
+  .fn-card.fn2::before { background: var(--c2); }
+  .fn-card.fn3::before { background: var(--c3); }
+
+  .fn-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .fn-badge {
+    font-size: 2rem;
+    font-weight: 800;
+    font-family: 'Space Mono', monospace;
+    line-height: 1;
+    min-width: 70px;
+  }
+
+  .fn1 .fn-badge { color: var(--c1); }
+  .fn2 .fn-badge { color: var(--c2); }
+  .fn3 .fn-badge { color: var(--c3); }
+
+  .fn-title h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .fn-title p {
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* PREGUNTA CLAVE */
+  .key-question {
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .fn1 .key-question { background: var(--c1bg); color: var(--c1); border-left: 4px solid var(--c1); }
+  .fn2 .key-question { background: var(--c2bg); color: var(--c2); border-left: 4px solid var(--c2); }
+  .fn3 .key-question { background: var(--c3bg); color: var(--c3); border-left: 4px solid var(--c3); }
+
+  /* REGLAS */
+  .rules {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .rule {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f9f8f6;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  .rule-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 99px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .fn1 .rule-num { background: var(--c1); }
+  .fn2 .rule-num { background: var(--c2); }
+  .fn3 .rule-num { background: var(--c3); }
+
+  .rule-text {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .rule-text strong { font-weight: 700; }
+
+  /* EJEMPLO */
+  .example-block {
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+  }
+
+  .example-block h4 {
+    font-size: 0.75rem;
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    letter-spacing: 0.05em;
+  }
+
+  .example-block.bad { background: #fff5f5; border: 1px dashed #fca5a5; }
+  .example-block.bad h4 { color: #ef4444; }
+  .example-block.good { background: #f0fdf4; border: 1px dashed #86efac; }
+  .example-block.good h4 { color: #16a34a; }
+
+  .example-block p {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: #374151;
+  }
+
+  .examples-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 560px) {
+    .examples-row { grid-template-columns: 1fr; }
+    .flow { gap: 4px; }
+    .flow-arrow { padding: 0 2px; font-size: 1rem; }
+  }
+
+  /* ELIMINA */
+  .eliminates {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+
+  .fn1 .eliminates { background: var(--c1bg); color: var(--c1); }
+  .fn2 .eliminates { background: var(--c2bg); color: var(--c2); }
+  .fn3 .eliminates { background: var(--c3bg); color: var(--c3); }
+
+  /* TABLA RESUMEN FINAL */
+  .summary-table {
+    background: var(--card);
+    border-radius: 20px;
+    border: 2px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 32px;
+  }
+
+  .summary-table h3 {
+    padding: 20px 24px 16px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    border-bottom: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    background: #f5f2eb;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.8rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.92rem;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  .badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 99px;
+  }
+
+  .badge.b1 { background: var(--c1bg); color: var(--c1); }
+  .badge.b2 { background: var(--c2bg); color: var(--c2); }
+  .badge.b3 { background: var(--c3bg); color: var(--c3); }
+
+  /* CADENA */
+  .chain {
+    background: #1a1a2e;
+    color: #e8e8f8;
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 2;
+    margin-bottom: 8px;
+  }
+
+  .chain .c1t { color: #ff8066; }
+  .chain .c2t { color: #b99dff; }
+  .chain .c3t { color: #6eeab4; }
+  .chain .arrow { color: #666; }
+
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    padding-top: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>📋 Las 3 Formas Normales</h1>
+    <p>// resumen · bases de datos relacionales</p>
+  </header>
+
+  <!-- FLUJO -->
+  <div class="flow">
+    <div class="flow-item raw">❌ Sin normalizar</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-item fn1">1FN</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-item fn2">2FN</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-item fn3">3FN ✅</div>
+  </div>
+
+  <!-- 1FN -->
+  <div class="fn-card fn1">
+    <div class="fn-header">
+      <div class="fn-badge">1FN</div>
+      <div class="fn-title">
+        <h2>Primera Forma Normal</h2>
+        <p>atomicidad + clave primaria</p>
+      </div>
+    </div>
+
+    <div class="key-question">
+      🔑 ¿Cada celda tiene UN solo valor?
+    </div>
+
+    <div class="rules">
+      <div class="rule">
+        <div class="rule-num">1</div>
+        <div class="rule-text"><strong>Atomicidad:</strong> cada celda contiene un único valor indivisible. Nada de listas separadas por comas.</div>
+      </div>
+      <div class="rule">
+        <div class="rule-num">2</div>
+        <div class="rule-text"><strong>Sin grupos repetidos:</strong> no puedes tener columnas como Producto1, Producto2, Producto3...</div>
+      </div>
+      <div class="rule">
+        <div class="rule-num">3</div>
+        <div class="rule-text"><strong>Clave primaria definida:</strong> cada fila se identifica de forma única (puede ser simple o compuesta).</div>
+      </div>
+    </div>
+
+    <div class="examples-row">
+      <div class="example-block bad">
+        <h4>❌ Viola 1FN</h4>
+        <p>
+          Boleta | Productos<br>
+          ───────────────────<br>
+          B001 &nbsp;| Laptop, Mouse<br>
+          B002 &nbsp;| Teclado
+        </p>
+      </div>
+      <div class="example-block good">
+        <h4>✅ Cumple 1FN</h4>
+        <p>
+          Boleta | Producto<br>
+          ─────────────────<br>
+          B001 &nbsp;| Laptop<br>
+          B001 &nbsp;| Mouse<br>
+          B002 &nbsp;| Teclado
+        </p>
+      </div>
+    </div>
+
+    <div class="eliminates">🗑️ Elimina: valores múltiples en una celda y columnas repetidas</div>
+  </div>
+
+  <!-- 2FN -->
+  <div class="fn-card fn2">
+    <div class="fn-header">
+      <div class="fn-badge">2FN</div>
+      <div class="fn-title">
+        <h2>Segunda Forma Normal</h2>
+        <p>sin dependencias parciales</p>
+      </div>
+    </div>
+
+    <div class="key-question">
+      🔑 ¿Cada columna depende de la clave COMPLETA?
+    </div>
+
+    <div class="rules">
+      <div class="rule">
+        <div class="rule-num">1</div>
+        <div class="rule-text"><strong>Debe estar en 1FN</strong> primero.</div>
+      </div>
+      <div class="rule">
+        <div class="rule-num">2</div>
+        <div class="rule-text"><strong>Sin dependencias parciales:</strong> si la clave es compuesta (A+B), todo atributo debe depender de A+B juntos, no solo de A o solo de B.</div>
+      </div>
+      <div class="rule">
+        <div class="rule-num">3</div>
+        <div class="rule-text"><strong>Aplica solo con clave compuesta.</strong> Si tu clave es simple (un solo campo), la tabla ya está automáticamente en 2FN.</div>
+      </div>
+    </div>
+
+    <div class="chain">
+      Clave: <span class="c2t">(NroBoleta + Producto)</span><br>
+      <span class="c1t">Fecha</span> <span class="arrow">→ depende solo de NroBoleta ⚠️ parcial</span><br>
+      <span class="c1t">Precio</span> <span class="arrow">→ depende solo de Producto &nbsp;&nbsp;⚠️ parcial</span><br>
+      <span class="c3t">Cantidad</span> <span class="arrow">→ depende de ambos &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;✅ completa</span>
+    </div>
+
+    <div class="examples-row">
+      <div class="example-block bad">
+        <h4>❌ Viola 2FN</h4>
+        <p>
+          1 tabla con todo junto:<br>
+          NroBoleta + Producto<br>
+          + Fecha + Cliente<br>
+          + Precio + Cantidad
+        </p>
+      </div>
+      <div class="example-block good">
+        <h4>✅ Cumple 2FN</h4>
+        <p>
+          BOLETA(NroBoleta, Fecha, Cliente)<br>
+          PRODUCTO(Producto, Precio)<br>
+          DETALLE(NroBoleta, Producto, Cantidad)
+        </p>
+      </div>
+    </div>
+
+    <div class="eliminates">🗑️ Elimina: datos que dependen solo de parte de la clave</div>
+  </div>
+
+  <!-- 3FN -->
+  <div class="fn-card fn3">
+    <div class="fn-header">
+      <div class="fn-badge">3FN</div>
+      <div class="fn-title">
+        <h2>Tercera Forma Normal</h2>
+        <p>sin dependencias transitivas</p>
+      </div>
+    </div>
+
+    <div class="key-question">
+      🔑 ¿Cada columna depende SOLO de la clave, y de nada más?
+    </div>
+
+    <div class="rules">
+      <div class="rule">
+        <div class="rule-num">1</div>
+        <div class="rule-text"><strong>Debe estar en 2FN</strong> primero.</div>
+      </div>
+      <div class="rule">
+        <div class="rule-num">2</div>
+        <div class="rule-text"><strong>Sin dependencias transitivas:</strong> ningún atributo no-clave puede depender de otro atributo no-clave. Todo debe depender directamente de la clave primaria.</div>
+      </div>
+    </div>
+
+    <div class="chain">
+      <span class="c1t">NroBoleta → Cliente → Nombre_Cliente</span><br>
+      <span class="arrow">Nombre llega "de rebote" a través de Cliente ⚠️ transitiva</span><br><br>
+      <span class="c3t">Solución: separar Cliente en su propia tabla</span><br>
+      <span class="c3t">BOLETA(NroBoleta, Fecha, Cliente🔗)</span><br>
+      <span class="c3t">CLIENTE(Cliente🔑, Nombre_Cliente)</span>
+    </div>
+
+    <div class="examples-row">
+      <div class="example-block bad">
+        <h4>❌ Viola 3FN</h4>
+        <p>
+          BOLETA:<br>
+          NroBoleta | Fecha<br>
+          Cliente &nbsp;&nbsp;| Telefono<br><br>
+          Telefono depende<br>
+          de Cliente, no de<br>
+          NroBoleta directamente
+        </p>
+      </div>
+      <div class="example-block good">
+        <h4>✅ Cumple 3FN</h4>
+        <p>
+          BOLETA:<br>
+          NroBoleta | Fecha | Cliente🔗<br><br>
+          CLIENTE:<br>
+          Cliente🔑 | Telefono<br><br>
+          Cada dato depende<br>
+          solo de su clave
+        </p>
+      </div>
+    </div>
+
+    <div class="eliminates">🗑️ Elimina: datos que dependen de otros datos que no son la clave</div>
+  </div>
+
+  <!-- TABLA COMPARATIVA -->
+  <div class="summary-table">
+    <h3>📊 Comparativa rápida</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Forma</th>
+          <th>Pregunta clave</th>
+          <th>Qué elimina</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge b1">1FN</span></td>
+          <td>¿Una celda = un valor?</td>
+          <td>Listas y columnas repetidas</td>
+          <td>Separar en filas</td>
+        </tr>
+        <tr>
+          <td><span class="badge b2">2FN</span></td>
+          <td>¿Depende de toda la clave?</td>
+          <td>Dependencias parciales</td>
+          <td>Separar en tablas por grupo</td>
+        </tr>
+        <tr>
+          <td><span class="badge b3">3FN</span></td>
+          <td>¿Depende solo de la clave?</td>
+          <td>Dependencias transitivas</td>
+          <td>Sacar el "intermediario" a su tabla</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>las formas normales son acumulativas · 3FN ⊃ 2FN ⊃ 1FN</footer>
+
+</div>
+</body>
+</html>
